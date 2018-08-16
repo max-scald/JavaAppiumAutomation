@@ -11,6 +11,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -108,6 +110,28 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testCencelResultOfsearchSeveralArticles(){
+        waitForElementAndClick(By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Can't find search Wikipedia input",
+                5);
+
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
+
+
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
+                "Selenium","Can't find search input",
+                5);
+
+        makeSureThatSeveralArticlesAreFound("Selenium");
+
+        waitForElementAndClick(By.id("org.wikipedia:id/search_close_btn"),
+                "Can't find X to cancel search",
+                5);
+
+        сheckThatSearchResultIsMissing("Selenium");
+
+    }
 
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds){
@@ -151,5 +175,30 @@ public class FirstTest {
                 String.valueOf(element.getAttribute(typeAtribute)),
                 text
         );
+    }
+
+    private void makeSureThatSeveralArticlesAreFound(String word){
+        waitForElementPresent(By.xpath("//*[contains(@text,'" + word + "')]"),
+                "Web element is not present",15);
+        List<WebElement> elementsList = driver.findElements(By.xpath("//*[contains(@text,'" + word + "')]"));
+        Assert.assertTrue("Articles less than 2",elementsList.size() > 1);
+    }
+
+    private void сheckThatSearchResultIsMissing(String word){
+        try{
+            waitForElementAndClick(By.id("org.wikipedia:id/recent_searches_delete_button"),
+                    "Can't find button 'Basket'",
+                    5);
+            waitForElementAndClick(By.id("android:id/button1"),
+                    "Can't find button 'YES'",
+                    5);
+        }catch (Exception e){
+            e.getMessage();
+        }
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
+
+        List<WebElement> elementsList = driver.findElements(By.xpath("//*[contains(@text,'" + word + "')]"));
+        Assert.assertTrue("List articles is not empty ",elementsList.isEmpty());
+
     }
 }
