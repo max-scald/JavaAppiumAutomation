@@ -123,7 +123,7 @@ public class FirstTest {
                 "Selenium","Can't find search input",
                 5);
 
-        makeSureThatSeveralArticlesAreFound("Selenium");
+        makeSureThatSeveralArticlesAreFound();
 
         waitForElementAndClick(By.id("org.wikipedia:id/search_close_btn"),
                 "Can't find X to cancel search",
@@ -132,6 +132,25 @@ public class FirstTest {
         сheckThatSearchResultIsMissing("Selenium");
 
     }
+
+    @Test
+    public void checkWordsInSearchInEachResult(){
+
+        waitForElementAndClick(By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Can't find search Wikipedia input",
+                5);
+
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
+
+
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
+                "Friendship","Can't find search input",
+                5);
+
+        makesSureThatEverySearchResultHasThatWord("Friendship");
+
+    }
+
 
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds){
@@ -177,11 +196,14 @@ public class FirstTest {
         );
     }
 
-    private void makeSureThatSeveralArticlesAreFound(String word){
-        waitForElementPresent(By.xpath("//*[contains(@text,'" + word + "')]"),
+    private List<WebElement> makeSureThatSeveralArticlesAreFound(){
+        waitForElementPresent(By.xpath("//*[contains(@resource-id,'page_list_item_title')]"),
                 "Web element is not present",15);
-        List<WebElement> elementsList = driver.findElements(By.xpath("//*[contains(@text,'" + word + "')]"));
+        List<WebElement> elementsList = driver.findElements(By.xpath("//*[contains(@resource-id,'page_list_item_title')]"));
+        System.out.println("Find:: " + elementsList.size() + " articles");
         Assert.assertTrue("Articles less than 2",elementsList.size() > 1);
+
+        return elementsList;
     }
 
     private void сheckThatSearchResultIsMissing(String word){
@@ -198,7 +220,15 @@ public class FirstTest {
         checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
 
         List<WebElement> elementsList = driver.findElements(By.xpath("//*[contains(@text,'" + word + "')]"));
-        Assert.assertTrue("List articles is not empty ",elementsList.isEmpty());
+        Assert.assertTrue("List articles is not empty",elementsList.isEmpty());
 
+    }
+
+    private void makesSureThatEverySearchResultHasThatWord(String word){
+        List<WebElement> list = makeSureThatSeveralArticlesAreFound();
+        for (WebElement element:list){
+            System.out.println("Find::" + element.getAttribute("text"));
+            Assert.assertTrue("There is no such word in this element",element.getAttribute("text").toUpperCase().contains(word.toUpperCase()));
+        }
     }
 }
