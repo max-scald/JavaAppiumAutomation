@@ -42,7 +42,7 @@ public class FirstTest {
                 "Can't find search Wikipedia input",
                 5);
 
-        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"Search…");
 
 
         waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
@@ -61,7 +61,7 @@ public class FirstTest {
                 "Can't find 'Search Wikipedia' input",
                 5);
 
-        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"Search…");
 
         waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
                 "Java","Can't find search input",
@@ -87,7 +87,7 @@ public class FirstTest {
                 "Can't find search Wikipedia input",
                 5);
 
-        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"Search…");
 
         waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
                 "Java","Can't find search input",
@@ -116,7 +116,7 @@ public class FirstTest {
                 "Can't find search Wikipedia input",
                 5);
 
-        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"Search…");
 
 
         waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
@@ -140,7 +140,7 @@ public class FirstTest {
                 "Can't find search Wikipedia input",
                 5);
 
-        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"Search…");
 
 
         waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
@@ -187,11 +187,11 @@ public class FirstTest {
         return element;
     }
 
-    private void checksForTextInWebElement (By by, String typeAtribute, String text){
+    private void checksForTextInWebElement (By by, String text){
         WebElement element = waitForElementPresent(by,"Web element is not present",5);
         Assert.assertEquals(
                 "Error! text [" + text + "] is not present.",
-                String.valueOf(element.getAttribute(typeAtribute)),
+                String.valueOf(element.getAttribute("text")),
                 text
         );
     }
@@ -217,7 +217,7 @@ public class FirstTest {
         }catch (Exception e){
             e.getMessage();
         }
-        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"text","Search…");
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"Search…");
 
         List<WebElement> elementsList = driver.findElements(By.xpath("//*[contains(@text,'" + word + "')]"));
         Assert.assertTrue("List articles is not empty",elementsList.isEmpty());
