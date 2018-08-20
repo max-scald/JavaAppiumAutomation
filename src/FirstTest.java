@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -166,7 +167,7 @@ public class FirstTest {
     private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds){
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.click();
-        return  element;
+        return element;
     }
 
     private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds){
@@ -199,7 +200,8 @@ public class FirstTest {
     private List<WebElement> makeSureThatSeveralArticlesAreFound(){
         waitForElementPresent(By.xpath("//*[contains(@resource-id,'page_list_item_title')]"),
                 "Web element is not present",15);
-        List<WebElement> elementsList = driver.findElements(By.xpath("//*[contains(@resource-id,'page_list_item_title')]"));
+        List<WebElement> elementsList =
+                driver.findElements(By.xpath("//*[contains(@resource-id,'page_list_item_title')]"));
         System.out.println("Find:: " + elementsList.size() + " articles");
         Assert.assertTrue("Articles less than 2",elementsList.size() > 1);
 
@@ -225,10 +227,15 @@ public class FirstTest {
     }
 
     private void makesSureThatEverySearchResultHasThatWord(String word){
-        List<WebElement> list = makeSureThatSeveralArticlesAreFound();
-        for (WebElement element:list){
-            System.out.println("Find::" + element.getAttribute("text"));
-            Assert.assertTrue("There is no such word in this element",element.getAttribute("text").toUpperCase().contains(word.toUpperCase()));
+        List<WebElement> list =  makeSureThatSeveralArticlesAreFound();
+
+        int negativeCount = 0;
+        for(WebElement element:list){
+            if(!element.getAttribute("text").toLowerCase().contains(word.toLowerCase())){
+                negativeCount++;
+                System.err.println("Position [" + negativeCount + "] Text [" + element.getAttribute("text") + "] doesn't match [" + word + "]");
+            }
         }
+        Assert.assertTrue("Sum of negative items [" + negativeCount + "]",negativeCount == 0);
     }
 }
