@@ -13,9 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -30,7 +28,7 @@ public class FirstTest {
         capabilities.setCapability("automationName","Appium");
         capabilities.setCapability("appPackage","org.wikipedia");
         capabilities.setCapability("appActivity",".main.MainActivity");
-        capabilities.setCapability("app","C:\\project\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
+        capabilities.setCapability("app","Z:\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"),capabilities);
     }
 
@@ -217,7 +215,11 @@ public class FirstTest {
                 "Can't press OK button",
                 5);
 
-        waitForElementAndClick(By.xpath("//*[@class='android.widget.ImageButton']"),
+        waitUntilElementdisappears(By.xpath("//*[@text='VIEW LIST']"),
+                "Button 'VIEW LIST' still hasn't disappeared",
+                5);
+
+        waitForElementAndClick(By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
                 "Can't close article, can't find X link",
                 5);
 
@@ -236,6 +238,29 @@ public class FirstTest {
                 "Can't delete saved article",
                 5);
 
+    }
+
+    @Test
+    public void testAmountOfNotEmptySearch(){
+        waitForElementAndClick(By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Can't find search Wikipedia input",
+                5);
+
+        String search_line = "Linkin Park Diskography";
+
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
+                search_line,"Can't find search input",
+                5);
+        String search_result_locator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']";
+
+        waitForElementPresent(By.xpath(search_result_locator),
+                "Can't find nything by the request " + search_line,
+                15);
+
+        int amount_of_search_results = getAmountOfElements(By.xpath(search_result_locator));
+
+        Assert.assertTrue("We found too few results!",
+                amount_of_search_results > 0);
     }
 
 
@@ -375,4 +400,14 @@ public class FirstTest {
 
     }
 
+    private Boolean waitUntilElementdisappears(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+    }
+
+    private int getAmountOfElements(By by){
+        List elements = driver.findElements(by);
+        return elements.size();
+    }
 }
