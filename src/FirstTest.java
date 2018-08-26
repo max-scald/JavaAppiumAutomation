@@ -32,6 +32,9 @@ public class FirstTest {
 
     @After
     public void tearDown(){
+        System.out.println("Return the position of the screen to the vertical");
+        driver.rotate(ScreenOrientation.PORTRAIT);
+
         driver.quit();
     }
 
