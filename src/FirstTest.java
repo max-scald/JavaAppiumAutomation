@@ -426,6 +426,27 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void testAssertTitle(){
+        String search_word = "Java";
+        String title_article = "Java (software platform)";
+
+        waitForElementAndClick(By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Can't find search Wikipedia input",
+                5);
+
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
+                search_word,
+                "Can't find search input",
+                5);
+
+        waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/search_results_list']//*[contains(@text,'Set of several computer')]"),
+                "Can't find search Wikipedia input",
+                5);
+
+        assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"),"Can't find title of article.");
+    }
+
 
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds){
@@ -620,4 +641,13 @@ public class FirstTest {
                     5);
         }
     }
+
+    private void assertElementPresent(By by, String error_message){
+        int amount_of_elements = getAmountOfElements(by);
+        if (amount_of_elements < 1){
+            String default_message = "An element '" + by.toString() + "' supposed to be present";
+            throw new AssertionError(default_message + " " + error_message);
+        }
+    }
+
 }
