@@ -5,10 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -216,7 +213,7 @@ public class FirstTest {
                 "Can't press OK button",
                 5);
 
-        waitUntilElementdisappears(By.xpath("//*[@text='VIEW LIST']"),
+        waitUntilElementDisappears(By.xpath("//*[@text='VIEW LIST']"),
                 "Button 'VIEW LIST' still hasn't disappeared",
                 5);
 
@@ -355,6 +352,80 @@ public class FirstTest {
                 5);
     }
 
+    @Test
+    public void testOnSavingTwoArticles(){
+        String search_word = "Java";
+        String title_first_article = "Java (programming language)";
+        String title_second_article = "Java (software platform)";
+        String name_of_folder = "Learning programming";
+
+        waitForElementAndClick(By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Can't find search Wikipedia input",
+                5);
+
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text,'Search…')]"),
+                search_word,"Can't find search input",
+                5);
+
+        waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='Object-oriented programming language']"),
+                "Can't find search Wikipedia input",
+                5);
+
+        waitForElementPresent(By.xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text' and contains(@text,'" + title_first_article + "')]"),
+                "Can't find article title::" + title_first_article,
+                15);
+
+        addArticleToMyList(name_of_folder);
+
+        driver.navigate().back();
+
+        waitForElementAndClick(By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Can't find search Wikipedia input in second time",
+                5);
+
+        waitForElementAndClick(By.xpath("//*[contains(@text,'" + search_word + "')]"),
+                "Can't find search '" + search_word + "' in 'Resent searches:'",
+                5);
+
+        waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/search_results_list']//*[contains(@text,'Set of several computer')]"),
+                "Can't find search Wikipedia input",
+                5);
+
+        waitForElementPresent(By.xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text' and contains(@text,'" + title_second_article + "')]"),
+                "Can't find article title::" + title_second_article,
+                15);
+
+        addArticleToMyList(name_of_folder);
+
+        waitForElementAndClick(By.xpath("//*[@text='VIEW LIST']"),
+                "Can't find Button 'VIEW LIST'",
+                5);
+
+        waitForElementAndClick(By.xpath("//*[@text='" + name_of_folder + "']"),
+                "Can't find creating folder:: " + name_of_folder,
+                5);
+
+        swipeElementToLeft(By.xpath("//*[@text='" + title_first_article + "']"),
+                "Can't find saved article:: " + title_first_article);
+
+        waitForElementNotPresent(By.xpath("//*[@text='" + title_first_article + "']"),
+                "Can't delete saved article:: " + title_first_article,
+                5);
+
+        waitForElementPresent(By.xpath("//*[@text='" + title_second_article + "']"),
+                "Can't find saved article:: " + title_second_article,
+                5);
+
+        waitForElementAndClick(By.xpath("//*[@text='" + title_second_article + "']"),
+                "Can't click on article:: " + title_second_article,
+                5);
+
+        waitForElementPresent(By.xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text' and contains(@text,'" + title_second_article + "')]"),
+                "Can't find article title::" + title_second_article,
+                15);
+
+    }
+
 
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds){
@@ -490,7 +561,7 @@ public class FirstTest {
 
     }
 
-    private Boolean waitUntilElementdisappears(By by, String error_message, long timeoutInSeconds) {
+    private Boolean waitUntilElementDisappears(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
@@ -512,5 +583,41 @@ public class FirstTest {
     private String waitForElementAndAttribute(By by, String attribute, String error_message, long timeoutInSeconds){
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+    private void addArticleToMyList(String name_of_folder){
+        waitForElementAndClick(By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Can't find button to open article options",
+                5);
+
+        waitForElementAndClick(By.xpath("//*[@text='Add to reading list']"),
+                "Can't find option to add article to reading list",
+                5);
+
+        try {
+
+            waitForElementAndClick(By.id("org.wikipedia:id/onboarding_button"),
+                    "Can't find 'Got it' tip overlay",
+                    5);
+
+            waitForElementAndClear(By.id("org.wikipedia:id/text_input"),
+                    "Can't find input to set name of articles folder",
+                    5);
+
+            waitForElementAndSendKeys(By.id("org.wikipedia:id/text_input"),
+                    name_of_folder,
+                    "Can't put text into articles folder input",
+                    5);
+
+            waitForElementAndClick(By.xpath("//*[@text='OK']"),
+                    "Can't press OK button",
+                    5);
+
+        }catch (TimeoutException te){
+
+            waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/item_title' and contains(@text,'" + name_of_folder + "')]"),
+                    "Can't find an earlier created folder::" + name_of_folder,
+                    5);
+        }
     }
 }
