@@ -26,7 +26,7 @@ public class FirstTest {
         capabilities.setCapability("automationName","Appium");
         capabilities.setCapability("appPackage","org.wikipedia");
         capabilities.setCapability("appActivity",".main.MainActivity");
-        capabilities.setCapability("app","Z:\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
+        capabilities.setCapability("app","C:\\project\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"),capabilities);
     }
 
@@ -646,8 +646,7 @@ public class FirstTest {
     }
 
     private void assertElementPresent(By by, String error_message){
-        int amount_of_elements = getAmountOfElements(by);
-        if (amount_of_elements < 1){
+        if (getAmountOfElements(by) == 0){
             String default_message = "An element '" + by.toString() + "' supposed to be present";
             throw new AssertionError(default_message + " " + error_message);
         }
