@@ -216,13 +216,7 @@ public class FirstTest {
                 "Can't press OK button",
                 5);
 
-        waitUntilElementDisappears(By.xpath("//*[@text='VIEW LIST']"),
-                "Button 'VIEW LIST' still hasn't disappeared",
-                5);
-
-        waitForElementAndClick(By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
-                "Can't close article, can't find X link",
-                5);
+        driver.navigate().back();
 
         waitForElementAndClick(By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
                 "Can't find navigation button to My lists",
