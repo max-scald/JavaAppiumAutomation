@@ -420,7 +420,6 @@ public class FirstTest {
         waitForElementPresent(By.xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text' and contains(@text,'" + title_second_article + "')]"),
                 "Can't find article title::" + title_second_article,
                 15);
-
     }
 
     @Test
@@ -515,7 +514,6 @@ public class FirstTest {
 
         List<WebElement> elementsList = driver.findElements(By.xpath("//*[contains(@text,'" + word + "')]"));
         Assert.assertTrue("List articles is not empty",elementsList.isEmpty());
-
     }
 
     private void makesSureThatEverySearchResultHasThatWord(String word){
@@ -645,5 +643,4 @@ public class FirstTest {
             throw new AssertionError(default_message + " " + error_message);
         }
     }
-
 }
