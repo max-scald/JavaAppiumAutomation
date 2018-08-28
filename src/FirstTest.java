@@ -440,7 +440,7 @@ public class FirstTest {
                 "Can't find search Wikipedia input",
                 5);
 
-//        assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"),"Can't find title of article.");
+        assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"),"Can't find title of article.");
     }
 
 
@@ -637,5 +637,10 @@ public class FirstTest {
         }
     }
 
-
+    private void assertElementPresent(By by, String error_message){
+        if (getAmountOfElements(by) == 0){
+            String default_message = "An element '" + by.toString() + "' supposed to be present";
+            throw new AssertionError(default_message + " " + error_message);
+        }
+    }
 }
