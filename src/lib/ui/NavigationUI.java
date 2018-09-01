@@ -17,5 +17,4 @@ public class NavigationUI extends MainPageObject {
                 "Can't find navigation button to My lists",
                 5);
     }
-
 }

@@ -25,16 +25,26 @@ public class CoreTestCase extends TestCase {
         capabilities.setCapability("appPackage","org.wikipedia");
         capabilities.setCapability("appActivity",".main.MainActivity");
         capabilities.setCapability("app","Z:\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
+
         driver = new AndroidDriver(new URL(AppiumURL),capabilities);
+        this.rorateScreenPortrait();
     }
 
     @Override
     protected void tearDown() throws Exception {
-        System.out.println("Return the position of the screen to the vertical");
-        driver.rotate(ScreenOrientation.PORTRAIT);
-
         driver.quit();
-
         super.tearDown();
+    }
+
+    protected void rorateScreenPortrait(){
+        driver.rotate(ScreenOrientation.PORTRAIT);
+    }
+
+    protected void rorateScreenLandscape(){
+        driver.rotate(ScreenOrientation.LANDSCAPE);
+    }
+
+    protected void backgroundApp(int seconds){
+        driver.runAppInBackground(seconds);
     }
 }

@@ -2,6 +2,9 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import java.util.List;
+import static junit.framework.TestCase.assertTrue;
 
 public class SearchPageObject extends MainPageObject{
     private static final String
@@ -10,7 +13,8 @@ public class SearchPageObject extends MainPageObject{
     SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
     SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='{SUBSTRING}']",
     SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
-    SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']";
+    SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']",
+    SEARCH_RESULT_LIST_OF_ELEMENTS = "//*[contains(@resource-id,'page_list_item_title')]";
 
 
     /*START TEMPLATES METHODS*/
@@ -71,7 +75,7 @@ public class SearchPageObject extends MainPageObject{
 
     public int getAmountOfFoundArticles(){
         this.waitForElementPresent(By.xpath(SEARCH_RESULT_ELEMENT),
-                "Can't find nything by the request",
+                "Can't find nothing by the request",
                 15);
         return this.getAmountOfElements(By.xpath(SEARCH_RESULT_ELEMENT));
     }
@@ -85,6 +89,43 @@ public class SearchPageObject extends MainPageObject{
     public void assertThereIsNoResultOfSearch(){
         this.assertElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT),
                 "We supposed not to find any results");
+    }
+
+    public List<WebElement> makeSureThatSeveralArticlesAreFound(){
+        waitForElementPresent(By.xpath(SEARCH_RESULT_LIST_OF_ELEMENTS),
+                "Web element is not present",15);
+        List<WebElement> elementsList =
+                driver.findElements(By.xpath(SEARCH_RESULT_LIST_OF_ELEMENTS));
+        System.out.println("Find:: " + elementsList.size() + " articles");
+        assertTrue("Articles less than 2",elementsList.size() > 1);
+        return elementsList;
+    }
+
+    public void makesSureThatEverySearchResultHasThatWord(String word){
+        List<WebElement> list =  makeSureThatSeveralArticlesAreFound();
+        int negativeCount = 0;
+        for(WebElement element:list){
+            if(!element.getAttribute("text").toLowerCase().contains(word.toLowerCase())){
+                negativeCount++;
+                System.err.println("Position [" + negativeCount + "] Text [" + element.getAttribute("text") + "] doesn't match [" + word + "]");
+            }
+        }
+        assertTrue("Sum of negative items [" + negativeCount + "]",negativeCount == 0);
+    }
+
+    public void сheckThatSearchResultIsMissing(String word){
+        try{
+            waitForElementAndClick(By.id("org.wikipedia:id/recent_searches_delete_button"),
+                    "Can't find button 'Basket'",
+                    5);
+            waitForElementAndClick(By.id("android:id/button1"),
+                    "Can't find button 'YES'",
+                    5);
+        }catch (Exception e){
+            e.getMessage();
+        }
+        checksForTextInWebElement(By.id("org.wikipedia:id/search_src_text"),"Search…");
+        assertTrue("List articles is not empty",this.getAmountOfElements(By.xpath("//*[contains(@text,'" + word + "')]")) == 0);
     }
 
 }
