@@ -1,6 +1,7 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.ui.ArticlePageObject;
 import lib.ui.MainPageObject;
 import lib.ui.SearchPageObject;
 import org.junit.Test;
@@ -64,6 +65,18 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Friendship");
         searchPageObject.makesSureThatEverySearchResultHasThatWord("Friendship");
+    }
+
+    @Test
+    public void testChecksThatSearchReturnMinimumThreeResults(){
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Sunshine");
+        assertTrue(searchPageObject.getAmountOfFoundArticles() >= 3);
+        searchPageObject.waitForElementByTitleAndDescription("Sunshine","film directed by Danny Boyle");
+        searchPageObject.waitForElementByTitleAndDescription("Sunshine","Bridge crossing the mouth of Tampa Bay");
+        searchPageObject.waitForElementByTitleAndDescription("Sunshine","Local government area of Queensland");
+
     }
 
 }

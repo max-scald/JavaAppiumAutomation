@@ -24,7 +24,7 @@ public class CoreTestCase extends TestCase {
         capabilities.setCapability("automationName","Appium");
         capabilities.setCapability("appPackage","org.wikipedia");
         capabilities.setCapability("appActivity",".main.MainActivity");
-        capabilities.setCapability("app","Z:\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
+        capabilities.setCapability("app","C:\\project\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
 
         driver = new AndroidDriver(new URL(AppiumURL),capabilities);
         this.rorateScreenPortrait();
