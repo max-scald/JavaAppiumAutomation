@@ -20,9 +20,9 @@ public class iOSTestCase extends TestCase {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         capabilities.setCapability("platformName","iOS");
-        capabilities.setCapability("deviceName","iPhone SE");
+        capabilities.setCapability("deviceName","iPhone X");
         capabilities.setCapability("platformVersion","11.4");;
-        capabilities.setCapability("app","/Users/jenkins/Desktop/JavaAppiumAutomation-master/apks/Wikipedia.app");
+        capabilities.setCapability("app","/Users/jenkins/Desktop/JavaAppiumAutomation/apks/Wikipedia.app");
 
         driver = new IOSDriver(new URL(AppiumURL),capabilities);
         this.rorateScreenPortrait();

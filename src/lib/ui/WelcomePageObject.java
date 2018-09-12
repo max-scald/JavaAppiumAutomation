@@ -7,9 +7,9 @@ public class WelcomePageObject extends MainPageObject{
 
     private static final String
     STEP_LEARN_MORE_LINK = "Learn more about Wikipedia",
-    STEP_NEW_WAYS_TO_EXPLORE_TEXT = "New way to explore",
+    STEP_NEW_WAYS_TO_EXPLORE_TEXT = "New ways to explore",
     STEP_ADD_OR_EDIT_PREFERRED_LANG_LINK = "Add or edit preferred languages",
-    STEP_LEARN_MORE_ABOUT_DATA_COLLECTED_LINK = "Learn more about date collected",
+    STEP_LEARN_MORE_ABOUT_DATA_COLLECTED_LINK = "Learn more about data collected",
     NEST_LINK = "Next",
     GET_STARTED_BUTTON = "Get started";
 
@@ -25,7 +25,7 @@ public class WelcomePageObject extends MainPageObject{
 
     public void waitForNewWayToExploreText(){
         this.waitForElementPresent(By.id(STEP_NEW_WAYS_TO_EXPLORE_TEXT),
-                "Can't find 'New way to explore' link",
+                "Can't find 'New ways to explore' link",
                 10);
     }
 
@@ -49,7 +49,7 @@ public class WelcomePageObject extends MainPageObject{
 
     public void clickGetStartedButton(){
         this.waitForElementAndClick(By.id(GET_STARTED_BUTTON),
-                "Can't find and click 'Get started' link",
+                "Can't find and click 'Get started' button",
                 10);
     }
 }
