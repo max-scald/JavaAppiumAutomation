@@ -1,6 +1,7 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import java.util.List;
@@ -15,7 +16,6 @@ abstract public class SearchPageObject extends MainPageObject{
                         SEARCH_RESULT_BY_SUBSTRINGS_TITLE_AND_DESCRIPTION_TPL,
                         SEARCH_RESULT_ELEMENT,
                         SEARCH_EMPTY_RESULT_ELEMENT,
-                        SEARCH_RESULT_LIST_OF_ELEMENTS,
                         BUSCKET_BUTTON,
                         YES_BUTTON;
 
@@ -108,10 +108,10 @@ abstract public class SearchPageObject extends MainPageObject{
     }
 
     public List<WebElement> makeSureThatSeveralArticlesAreFound(){
-        waitForElementPresent(SEARCH_RESULT_LIST_OF_ELEMENTS,
+        waitForElementPresent(SEARCH_RESULT_ELEMENT,
                 "Web element is not present",15);
         List<WebElement> elementsList =
-                driver.findElements(super.getLocatorByString(SEARCH_RESULT_LIST_OF_ELEMENTS));
+                driver.findElements(super.getLocatorByString(SEARCH_RESULT_ELEMENT));
         System.out.println("Find:: " + elementsList.size() + " articles");
         assertTrue("Articles less than 2",elementsList.size() > 1);
         return elementsList;
@@ -120,10 +120,21 @@ abstract public class SearchPageObject extends MainPageObject{
     public void makesSureThatEverySearchResultHasThatWord(String word){
         List<WebElement> list =  makeSureThatSeveralArticlesAreFound();
         int negativeCount = 0;
+        String actualText = "";
+
+
+
+
         for(WebElement element:list){
-            if(!element.getAttribute("text").toLowerCase().contains(word.toLowerCase())){
+            if(Platform.getInstance().isAndroid()) {
+                actualText = element.getAttribute("text");
+            }else if(Platform.getInstance().isIOS()){
+                actualText = element.getAttribute("name");
+            }
+
+            if(!actualText.toLowerCase().contains(word.toLowerCase())){
                 negativeCount++;
-                System.err.println("Position [" + negativeCount + "] Text [" + element.getAttribute("text") + "] doesn't match [" + word + "]");
+                System.err.println("Position [" + negativeCount + "] Text [" + actualText + "] doesn't match [" + word + "]");
             }
         }
         assertTrue("Sum of negative items [" + negativeCount + "]",negativeCount == 0);
@@ -140,8 +151,13 @@ abstract public class SearchPageObject extends MainPageObject{
         }catch (Exception e){
             e.getMessage();
         }
-        checksForTextInWebElement("id:org.wikipedia:id/search_src_text","Search…");
-        assertTrue("List articles is not empty",getAmountOfElements("xpath://*[contains(@text,'" + word + "')]") == 0);
+        if(Platform.getInstance().isAndroid()) {
+            checksForTextInWebElement("id:org.wikipedia:id/search_src_text", "Search…");
+        }else if(Platform.getInstance().isIOS()) {
+            initSearchInput();
+        }
+            assertTrue( "List articles is not empty",getAmountOfElements(SEARCH_RESULT_BY_SUBSTRING_TPL) == 0);
+
     }
 
 }
