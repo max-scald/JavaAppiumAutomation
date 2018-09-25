@@ -58,7 +58,7 @@ public class Platform {
     private DesiredCapabilities getIOSDesiredCapabilities(){
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("deviceName", "iPhone X");
+        capabilities.setCapability("deviceName", "iPhone 6");
         capabilities.setCapability("platformVersion", "11.4");
         capabilities.setCapability("app", "/Users/jenkins/Desktop/JavaAppiumAutomation/apks/Wikipedia.app");
         return capabilities;

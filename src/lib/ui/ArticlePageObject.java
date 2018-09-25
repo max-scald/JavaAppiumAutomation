@@ -56,7 +56,20 @@ abstract public class ArticlePageObject extends MainPageObject {
     }
 
     public void closeArticle(){
-        driver.navigate().back();
+        if(Platform.getInstance().isAndroid()){
+            driver.navigate().back();
+        }else {
+            try{
+                this.waitForElementAndClick("id:places auth close",
+                        "Can't find and click 'X' on PopUp window",
+                        5);
+            }catch (Exception e){
+
+            }
+            this.waitForElementAndClick(CLOSE_ARTICLE_BUTTON,
+                    "Can't find and click 'Back' button",
+                    5);
+        }
     }
 
     public void addArticleToMyList(String name_of_list){

@@ -24,18 +24,20 @@ public class MyListsTests extends CoreTestCase {
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.waitForTitleElement();
         String article_title = articlePageObject.getArticleTitle();
-
         if(Platform.getInstance().isAndroid()) {
             articlePageObject.addArticleToMyList(name_of_folder);
         }else {
             articlePageObject.addArticleToMySaved();
         }
         articlePageObject.closeArticle();
-
         NavigationUI navigationUI = NavigationUIFactory.get(driver);
-        navigationUI.clickToMyLists();
-        navigationUI.clickToMyLists();
 
+        if(Platform.getInstance().isAndroid()){
+            navigationUI.clickToMyLists();
+            navigationUI.clickToMyLists();
+        }else {
+            navigationUI.clickToMyLists();
+        }
         MyListsPageObject myListsPageObject = MyListsPageObjectFactory.get(driver);
         if(Platform.getInstance().isAndroid()) {
             myListsPageObject.openFolderByName(name_of_folder);
